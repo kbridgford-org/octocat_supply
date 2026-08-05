@@ -15,12 +15,12 @@ tools: ['search', 'edit', 'web','vscode/openSimpleBrowser', 'read', 'execute', '
 <% endif %>
 
 ## 🎯 Objective
-Increase API test coverage by implementing comprehensive unit tests for Product and Supplier routes.
+Increase API test coverage by implementing comprehensive unit tests for Product and Supplier routes, **including the new `POST /api/products/bulk` inventory bulk-import endpoint**.
 
 ## 📋 Missing Test Files
 
 ### 🔗 Route Tests (High Priority)
-The following route files need complete test coverage:
+The following route files need complete test coverage. Be sure to cover the **`POST /api/products/bulk`** bulk-import endpoint: valid list, empty input, whitespace-only entries, duplicate handling, and the added / skipped / error summary counts.
 
 <% if demo_options.backend == 'nodejs' %>
 - [ ] `src/routes/product.test.ts`

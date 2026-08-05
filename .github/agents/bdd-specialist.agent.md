@@ -113,7 +113,7 @@ When you describe what you need tested, I will:
 - **Scenarios**: Independent, can run in any order
 - **Locators**: Prefer `aria-label`, fall back to semantic selectors (`h1:has-text()`), avoid brittle CSS
 - **Waits**: Use `expect()` with visibility checks, never hardcoded `waitForTimeout()`
-- **Stateful controls**: Prime prerequisite inputs (e.g., tap the quantity increase control before clicking a disabled "Add to cart" button) and assert the element is enabled before acting
+- **Stateful controls**: Prime prerequisite inputs (e.g., paste a valid comma-delimited list into the products textarea before clicking a disabled "Bulk Load" button) and assert the element is enabled before acting
 - **Accessibility**: Include scenarios for keyboard nav and screen readers
 - **Data**: Use seeded database data when possible, clean up after tests if creating new data
 - **Organization**: Feature files describe behavior, test files implement
@@ -143,34 +143,48 @@ Feature: [Feature Name]
 ## Gherkin Standards
 
 ```gherkin
-Feature: Shopping Cart Management
-  As a customer
-  I want to manage items in my shopping cart
-  So that I can purchase products
+Feature: Inventory Bulk-Load
+  As an inventory operator
+  I want to paste a comma-delimited list of new products
+  So that I can add many products to inventory in one step
 
   Background:
-    Given the user is logged in
+    Given the operator is on the inventory bulk-load admin page
     And the product catalog is loaded
 
-  Scenario: Add item to cart and verify count
-    When the user adds a product to cart
-    Then the cart icon should show 1 item
-    And the cart should be visible in the navigation
+  Scenario: Bulk-load a valid list and verify products created
+    When the operator pastes "Smart Feeder, Laser Toy, Heated Bed"
+    And the operator clicks "Bulk Load"
+    Then the results summary should show "3 added"
+    And the products should appear in the catalog
 
-  Scenario Outline: Add multiple quantities
-    When the user adds <quantity> items to cart
-    Then the cart count should show <quantity>
+  Scenario Outline: Bulk-load lists of varying size
+    When the operator bulk-loads <count> products
+    Then the results summary should show "<count> added"
     Examples:
-      | quantity |
-      | 1        |
-      | 5        |
-      | 100      |
+      | count |
+      | 1     |
+      | 5     |
+      | 100   |
 
-  Scenario: Empty cart state
-    Given the cart is empty
-    When the user navigates to the cart page
-    Then the message "Your cart is empty" should appear
-    And the checkout button should be disabled
+  Scenario: Empty input state
+    Given the products textarea is empty
+    When the operator clicks "Bulk Load"
+    Then the message "Please paste a comma-delimited list of products" should appear
+    And the Bulk Load button should be disabled
+
+  Scenario: Duplicate products are skipped
+    Given a product named "Smart Feeder" already exists
+    When the operator pastes "Smart Feeder, Laser Toy"
+    And the operator clicks "Bulk Load"
+    Then the results summary should show "1 added"
+    And the results summary should show "1 skipped"
+
+  Scenario: Validation errors are reported
+    When the operator pastes "Laser Toy, , , Heated Bed"
+    And the operator clicks "Bulk Load"
+    Then blank entries should be ignored
+    And the results summary should show "2 added"
 ```
 
 ## Playwright Test Structure (OctoCAT Supply Pattern)
@@ -293,11 +307,11 @@ frontend/
 ├── tests/
 │   ├── features/                     # Gherkin feature files
 │   │   ├── product-navigation.feature
-│   │   ├── cart-management.feature
+│   │   ├── inventory-bulk-load.feature
 │   │   └── checkout.feature
 │   └── e2e/                         # Playwright test files
 │       ├── product-navigation.spec.ts
-│       ├── cart-management.spec.ts
+│       ├── inventory-bulk-load.spec.ts
 │       └── checkout.spec.ts
 ├── playwright.config.ts              # Playwright configuration
 └── .gitignore                        # Includes test-results/, playwright-report/
@@ -314,15 +328,15 @@ Root:
 
 ## Coverage Matrix Examples
 
-### Example 1: Add to Cart Feature
+### Example 1: Inventory Bulk-Load Feature
 ```
 Scenarios:
-✓ Happy Path: Add item, verify count updates
-✓ Edge: Add same item twice, verify quantity increments
-✓ Edge: Add 100 items (boundary test)
-✓ Error: Try adding out-of-stock item
-✓ Accessibility: Tab to button, press Enter to add
-✓ Accessibility: Screen reader announces new item count
+✓ Happy Path: Paste valid list, verify products created and "N added" count
+✓ Edge: Paste list containing an existing product, verify it is skipped
+✓ Edge: Paste 100 products (boundary test)
+✓ Error: Paste blank/whitespace-only entries, verify they are ignored
+✓ Accessibility: Tab to textarea, paste, Tab to button, press Enter to load
+✓ Accessibility: Screen reader announces the added/skipped/error summary
 ```
 
 ### Example 2: API Supplier Endpoint
@@ -355,8 +369,8 @@ For each feature, verify:
 
 ## Tips for Best Results
 
-- **Describe the user journey**: "Customer wants to add items to cart and checkout"
-- **List edge cases**: "What if cart is empty? What if product is out of stock?"
+- **Describe the user journey**: "Operator wants to paste a comma-delimited list of products and bulk-load them into inventory"
+- **List edge cases**: "What if the input is empty? What if a product already exists?"
 - **Mention error scenarios**: "Invalid coupon, network timeout, permission denied"
 - **Request accessibility focus**: "Include keyboard navigation and screen reader tests"
 - **Specify scope**: "Desktop only" vs "Mobile + Desktop" vs "All browsers"
@@ -367,7 +381,7 @@ For each feature, verify:
 **Request 1**: "Create BDD tests for the new Vendor Dashboard page. Should include searching, filtering, and bulk actions."
 → I'll create feature files + coverage matrix + Playwright tests configured for Chromium & Edge
 
-**Request 2**: "Improve accessibility testing. Ensure keyboard navigation works for the entire cart flow."
+**Request 2**: "Improve accessibility testing. Ensure keyboard navigation works for the entire inventory bulk-load flow."
 → I'll add keyboard/screen reader scenarios + Playwright accessibility assertions
 
 **Request 3**: "Implement the product-navigation.feature file using Playwright"

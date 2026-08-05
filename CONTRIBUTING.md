@@ -135,11 +135,11 @@ Refer to the internal Octodemo framework documentation for instructions on how t
       git checkout -b feature/your-feature-name
       ```
 
-    - **For changes targeting specific demo feature branches (`feature-add-tos-download`, `feature-add-cart-page`):**
+    - **For changes targeting specific demo feature branches (`feature-add-tos-download`, `feature-add-inventory-bulk-load`):**
       **You MUST branch off the target feature branch.** Do NOT branch off `main` if your changes are intended for these specific demo scenarios.
 
       ```bash
-      git checkout feature-add-tos-download  # or feature-add-cart-page
+      git checkout feature-add-tos-download  # or feature-add-inventory-bulk-load
       git pull
       git checkout -b fix/your-fix-name
       ```
@@ -174,7 +174,7 @@ Refer to the internal Octodemo framework documentation for instructions on how t
 
    ```bash
    git add .
-   git commit -m "feat: Add shopping cart demo scenario"
+   git commit -m "feat: Add inventory bulk-load demo scenario"
    ```
 
 6. **Push to your fork and create a Pull Request:**
