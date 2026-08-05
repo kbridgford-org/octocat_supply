@@ -79,7 +79,7 @@ INTERNAL THOUGHTS – not shown to the user.
 
 ## 7. Documentation & Resources
 <!-- Links to specs, diagrams, prior PRs, related issues -->
-- Architecture: [Architecture Document](../docs/architecture.md)
+- Architecture: [Architecture Document](../../docs/architecture.md)
 - Related PR: #
 - Design mockup: 
 - API documentation:
