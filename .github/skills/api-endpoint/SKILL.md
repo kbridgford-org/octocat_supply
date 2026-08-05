@@ -24,6 +24,10 @@ Routes (Express.js) → Repository (Data Access) → SQLite Database
 - Writing Swagger/OpenAPI documentation
 - Extending existing routes with new operations
 
+## Example Entity for Demos
+
+When demonstrating this skill (e.g. Module 8), generate an **inventory-themed entity** such as `StockLocation` or `InventoryAdjustment`. Substitute your chosen entity name for `EntityName`/`entity_names` in the patterns below — the skill mechanics are identical regardless of the entity.
+
 ## Workflow
 
 ### Step 1: Define the Model

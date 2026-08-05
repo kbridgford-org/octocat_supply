@@ -49,11 +49,11 @@ export default function Products() {
     }));
   };
 
-  const handleAddToCart = (productId: number) => {
+  const handleRequestStock = (productId: number) => {
     const quantity = quantities[productId] || 0;
     if (quantity > 0) {
-      // TODO: Implement cart functionality
-      alert(`Added ${quantity} items to cart`);
+      // TODO: Implement stock request functionality
+      alert(`Requested stock for ${quantity} items`);
       setQuantities((prev) => ({
         ...prev,
         [productId]: 0,
@@ -236,16 +236,16 @@ export default function Products() {
                         </button>
                       </div>
                       <button
-                        onClick={() => handleAddToCart(product.productId)}
+                        onClick={() => handleRequestStock(product.productId)}
                         className={`px-4 py-2 rounded-lg transition-colors ${quantities[product.productId]
                           ? 'bg-primary hover:bg-accent text-white'
                           : `${darkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-200 text-gray-500'} cursor-not-allowed`
                           }`}
                         disabled={!quantities[product.productId]}
-                        aria-label={`Add ${quantities[product.productId] || 0} ${product.name} to cart`}
-                        id={`add-to-cart-${product.productId}`}
+                        aria-label={`Request stock for ${quantities[product.productId] || 0} ${product.name}`}
+                        id={`request-stock-${product.productId}`}
                       >
-                        Add to Cart
+                        Request Stock
                       </button>
                     </div>
                   </div>

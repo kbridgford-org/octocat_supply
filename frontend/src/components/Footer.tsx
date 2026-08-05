@@ -26,7 +26,7 @@ const Footer: React.FC = () => {
             <ul className="space-y-2">
               <li>
                 <a href="#" className="hover:text-primary">
-                  My Cart
+                  My Orders
                 </a>
               </li>
               <li>
@@ -36,7 +36,7 @@ const Footer: React.FC = () => {
               </li>
               <li>
                 <a href="#" className="hover:text-primary">
-                  Shopping Details
+                  Order History
                 </a>
               </li>
               <li>
