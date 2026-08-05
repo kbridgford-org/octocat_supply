@@ -169,9 +169,8 @@ Feature: Inventory Bulk-Load
 
   Scenario: Empty input state
     Given the products textarea is empty
-    When the operator clicks "Bulk Load"
-    Then the message "Please paste a comma-delimited list of products" should appear
-    And the Bulk Load button should be disabled
+    Then the Bulk Load button should be disabled
+    And the message "Please paste a comma-delimited list of products" should appear
 
   Scenario: Duplicate products are skipped
     Given a product named "Smart Feeder" already exists

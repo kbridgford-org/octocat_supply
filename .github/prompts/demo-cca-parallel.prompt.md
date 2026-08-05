@@ -29,8 +29,8 @@ Explore three different **visual/UX design approaches** for an **Inventory Bulk-
 6. Assign the Copilot Agent to each sub-issue to implement the design in parallel.
 
 ### Frontend Architecture and Building
-- Refer to the existing Architecture Doc (../docs/architecture.md) for frontend structure
-- Refer to the Build Doc (../docs/build.md) for build instructions
+- Refer to the existing Architecture Doc (../../docs/architecture.md) for frontend structure
+- Refer to the Build Doc (../../docs/build.md) for build instructions
 
 ### Implementation Specifications
 1. **Bulk-import endpoint**: All approaches call `POST /api/products/bulk`, inserting products via the existing `productsRepo` pattern with parameterized SQL.

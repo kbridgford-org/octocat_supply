@@ -24,7 +24,7 @@ Implement a complete **Inventory Bulk-Load** admin page (backend/admin, no login
 5. Consistent styling with the existing application (dark/light themes)
 
 ## Design Reference
-Use the provided design mockup (`../docs/design/inventory-bulk-load.svg`, rendered as `../docs/design/inventory-bulk-load.png`) as the visual reference for implementation. The design shows:
+Use the provided design mockup (`../../docs/design/inventory-bulk-load.svg`, rendered as `../../docs/design/inventory-bulk-load.png`) as the visual reference for implementation. The design shows:
 - A page title and a short description
 - A large "paste a comma-delimited list" textarea
 - A "Bulk Load" button (plus a secondary "Clear")
@@ -34,8 +34,8 @@ Use the provided design mockup (`../docs/design/inventory-bulk-load.svg`, render
 ## Technical Requirements
 
 ### Architecture and Building
-- Refer to the existing Architecture Doc (`../docs/architecture.md`) for frontend + API structure
-- Refer to the Build Doc (`../docs/build.md`) for build instructions
+- Refer to the existing Architecture Doc (`../../docs/architecture.md`) for frontend + API structure
+- Refer to the Build Doc (`../../docs/build.md`) for build instructions
 
 ### Implementation Specifications
 1. **Bulk-import endpoint**: Add a `POST /api/products/bulk` route that accepts a list of product names, inserts new products via the existing `productsRepo` pattern, and returns a summary (`added`, `skipped`, `errors`). Use parameterized SQL — never build queries from the raw user-supplied string.
