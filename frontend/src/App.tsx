@@ -10,6 +10,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import AdminProducts from './components/admin/AdminProducts';
 import AdminInventoryBulkLoad from './components/admin/AdminInventoryBulkLoad';
 import AdminBulkDeleteProducts from './components/admin/AdminBulkDeleteProducts';
+import Wheel from './components/wheel/Wheel';
 import { useTheme } from './context/ThemeContext';
 
 // Wrapper component to apply theme classes
@@ -31,6 +32,8 @@ function ThemedApp() {
             <Route path="/admin/products" element={<AdminProducts />} />
             <Route path="/admin/inventory" element={<AdminInventoryBulkLoad />} />
             <Route path="/admin/products/bulk-delete" element={<AdminBulkDeleteProducts />} />
+            {/* Unlisted route (intentionally not in the nav) */}
+            <Route path="/wheel" element={<Wheel />} />
           </Routes>
         </main>
         <Footer />
