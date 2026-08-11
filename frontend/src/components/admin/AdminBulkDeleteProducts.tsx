@@ -1,7 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
-import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 import { api } from '../../api/config';
 import BulkDeleteConfirmModal from './BulkDeleteConfirmModal';
@@ -28,7 +26,6 @@ export interface BulkDeleteResult {
 }
 
 export default function AdminBulkDeleteProducts() {
-  const { isAdmin } = useAuth();
   const { darkMode } = useTheme();
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
@@ -116,10 +113,6 @@ export default function AdminBulkDeleteProducts() {
       setIsDeleting(false);
     }
   };
-
-  if (!isAdmin) {
-    return <Navigate to="/" replace />;
-  }
 
   return (
     <div
