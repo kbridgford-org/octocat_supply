@@ -20,6 +20,17 @@ class DatabaseConnection {
   }
 
   /**
+   * better-sqlite3 can only bind numbers, strings, bigints, buffers, and null —
+   * it throws a TypeError for native JS booleans. Since several tables (e.g.
+   * suppliers.active/verified) are typed as boolean at the TS model layer but
+   * stored as SQLite INTEGER, normalize booleans to 0/1 before binding so calls
+   * like `create`/`update` with boolean fields don't fail at runtime.
+   */
+  private static normalizeParams(params: unknown[]): unknown[] {
+    return params.map((param) => (typeof param === 'boolean' ? (param ? 1 : 0) : param));
+  }
+
+  /**
    * Execute a SQL statement that modifies data (INSERT, UPDATE, DELETE)
    * @param sql SQL statement to execute
    * @param params Parameters to bind to the SQL statement
@@ -29,7 +40,7 @@ class DatabaseConnection {
    *       and validate it's within safe integer range to prevent silent truncation.
    */
   public run(sql: string, params: unknown[] = []): Promise<{ lastID?: number; changes: number }> {
-    const info = this.db.prepare(sql).run(...(params as any[]));
+    const info = this.db.prepare(sql).run(...(DatabaseConnection.normalizeParams(params) as any[]));
     const lastID = info.lastInsertRowid;
     
     // Convert bigint to number with safety check to prevent silent truncation
@@ -44,12 +55,12 @@ class DatabaseConnection {
   }
 
   public get<T = unknown>(sql: string, params: unknown[] = []): Promise<T | undefined> {
-    const row = this.db.prepare(sql).get(...(params as any[]));
+    const row = this.db.prepare(sql).get(...(DatabaseConnection.normalizeParams(params) as any[]));
     return Promise.resolve(row as T | undefined);
   }
 
   public all<T = unknown>(sql: string, params: unknown[] = []): Promise<T[]> {
-    const rows = this.db.prepare(sql).all(...(params as any[]));
+    const rows = this.db.prepare(sql).all(...(DatabaseConnection.normalizeParams(params) as any[]));
     return Promise.resolve(rows as T[]);
   }
 

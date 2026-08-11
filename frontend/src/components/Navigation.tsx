@@ -76,7 +76,20 @@ export default function Navigation() {
                         >
                           Manage Products
                         </Link>
-                        {/* Space for other entity management links */}
+                        <Link
+                          to="/admin/inventory"
+                          className={`block px-4 py-2 text-sm ${darkMode ? 'text-light hover:bg-primary hover:text-white' : 'text-gray-700 hover:bg-primary hover:text-white'} transition-colors`}
+                          onClick={() => setAdminMenuOpen(false)}
+                        >
+                          Bulk Load Inventory
+                        </Link>
+                        <Link
+                          to="/admin/products/bulk-delete"
+                          className={`block px-4 py-2 text-sm ${darkMode ? 'text-light hover:bg-primary hover:text-white' : 'text-gray-700 hover:bg-primary hover:text-white'} transition-colors`}
+                          onClick={() => setAdminMenuOpen(false)}
+                        >
+                          Bulk Delete Products
+                        </Link>
                       </div>
                     </div>
                   )}

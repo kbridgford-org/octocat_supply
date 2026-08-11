@@ -12,9 +12,16 @@ import headquartersRoutes from './routes/headquarters';
 import supplierRoutes from './routes/supplier';
 import { initializeDatabase } from './init-db';
 import { errorHandler } from './utils/errors';
+import { initTAO, observe } from './utils/tao';
+
+// Initialize TAO observability (logs, metrics, traces)
+initTAO({ serviceName: 'octocat-supply-api' });
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+// Auto-instrument all routes with TAO
+app.use(observe());
 
 // Parse CORS origins from environment variable if available
 const corsOrigins = process.env.API_CORS_ORIGINS

@@ -8,6 +8,8 @@ import Login from './components/Login';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import AdminProducts from './components/admin/AdminProducts';
+import AdminInventoryBulkLoad from './components/admin/AdminInventoryBulkLoad';
+import AdminBulkDeleteProducts from './components/admin/AdminBulkDeleteProducts';
 import { useTheme } from './context/ThemeContext';
 
 // Wrapper component to apply theme classes
@@ -27,6 +29,8 @@ function ThemedApp() {
             <Route path="/products" element={<Products />} />
             <Route path="/login" element={<Login />} />
             <Route path="/admin/products" element={<AdminProducts />} />
+            <Route path="/admin/inventory" element={<AdminInventoryBulkLoad />} />
+            <Route path="/admin/products/bulk-delete" element={<AdminBulkDeleteProducts />} />
           </Routes>
         </main>
         <Footer />

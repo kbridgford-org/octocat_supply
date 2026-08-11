@@ -44,3 +44,94 @@ export interface Product {
   imgName: string;
   discount?: number;
 }
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     BulkLoadResultDetail:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *         status:
+ *           type: string
+ *           enum: [added, skipped, error]
+ *         reason:
+ *           type: string
+ *     BulkLoadResult:
+ *       type: object
+ *       properties:
+ *         added:
+ *           type: integer
+ *           description: Number of products successfully created
+ *         skipped:
+ *           type: integer
+ *           description: Number of duplicate names skipped
+ *         errors:
+ *           type: integer
+ *           description: Number of names that failed to insert
+ *         details:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/BulkLoadResultDetail'
+ */
+export interface BulkLoadResultDetail {
+  name: string;
+  status: 'added' | 'skipped' | 'error';
+  reason?: string;
+}
+
+export interface BulkLoadResult {
+  added: number;
+  skipped: number;
+  errors: number;
+  details: BulkLoadResultDetail[];
+}
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     BulkDeleteResultDetail:
+ *       type: object
+ *       properties:
+ *         productId:
+ *           type: integer
+ *         name:
+ *           type: string
+ *         status:
+ *           type: string
+ *           enum: [deleted, notFound, error]
+ *         reason:
+ *           type: string
+ *     BulkDeleteResult:
+ *       type: object
+ *       properties:
+ *         deleted:
+ *           type: integer
+ *           description: Number of products successfully deleted
+ *         notFound:
+ *           type: integer
+ *           description: Number of IDs that did not match an existing product
+ *         errors:
+ *           type: integer
+ *           description: Number of IDs that failed to delete
+ *         details:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/BulkDeleteResultDetail'
+ */
+export interface BulkDeleteResultDetail {
+  productId: number;
+  name?: string;
+  status: 'deleted' | 'notFound' | 'error';
+  reason?: string;
+}
+
+export interface BulkDeleteResult {
+  deleted: number;
+  notFound: number;
+  errors: number;
+  details: BulkDeleteResultDetail[];
+}
