@@ -7,10 +7,6 @@
 > <https://copilot-academy.github.io/workshops/immersive-experience>. The **hero feature** built
 > live in Module 1 is an **admin/backend Inventory Bulk-Load page** (no login, demo only): paste a
 > comma-delimited list of products → parse → insert → show a summary (added / skipped / errors).
->
-> ⚠️ The bulk-load feature is **not** in the baseline — it is built **live** in Module 1.
-> ⚠️ The **finale spin-wheel** is a surprise: build it live from `scratch/spin-wheel-reveal.prompt.md`
-> and do **not** commit it.
 
 ## Pre-flight
 
