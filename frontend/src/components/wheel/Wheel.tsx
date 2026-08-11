@@ -40,6 +40,39 @@ const segmentPath = (start: number, end: number) => {
 const truncate = (name: string, max = 16) =>
   name.length > max ? `${name.slice(0, max - 1)}…` : name;
 
+// Convert HSL (h in [0,360), s/l in [0,1]) to RGB channels in [0,1].
+const hslToRgb = (h: number, s: number, l: number): [number, number, number] => {
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const hp = h / 60;
+  const x = c * (1 - Math.abs((hp % 2) - 1));
+  let r = 0;
+  let g = 0;
+  let b = 0;
+  if (hp < 1) {
+    [r, g] = [c, x];
+  } else if (hp < 2) {
+    [r, g] = [x, c];
+  } else if (hp < 3) {
+    [g, b] = [c, x];
+  } else if (hp < 4) {
+    [g, b] = [x, c];
+  } else if (hp < 5) {
+    [r, b] = [x, c];
+  } else {
+    [r, b] = [c, x];
+  }
+  const m = l - c / 2;
+  return [r + m, g + m, b + m];
+};
+
+// Pick a readable text colour (black or white) for a segment fill, using the
+// perceived luminance so labels keep sufficient contrast across the hue range.
+const labelColor = (hue: number, saturation: number, lightness: number) => {
+  const [r, g, b] = hslToRgb(hue, saturation, lightness);
+  const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+  return luminance > 0.55 ? '#0A0A0A' : '#FFFFFF';
+};
+
 export default function Wheel() {
   const { darkMode } = useTheme();
   const { data: products, isLoading, error } = useQuery('products', fetchProducts);
@@ -57,18 +90,29 @@ export default function Wheel() {
   const segments = useMemo(() => {
     const count = names.length;
     if (count === 0) {
-      return [] as Array<{ name: string; start: number; end: number; mid: number; color: string }>;
+      return [] as Array<{
+        name: string;
+        start: number;
+        end: number;
+        mid: number;
+        color: string;
+        textColor: string;
+      }>;
     }
     const segAngle = 360 / count;
+    const saturation = 0.65;
+    const lightness = darkMode ? 0.45 : 0.55;
     return names.map((name, i) => {
       const start = i * segAngle;
       const end = start + segAngle;
+      const hue = Math.round((i * 360) / count);
       return {
         name,
         start,
         end,
         mid: start + segAngle / 2,
-        color: `hsl(${Math.round((i * 360) / count)}, 65%, ${darkMode ? 45 : 55}%)`,
+        color: `hsl(${hue}, ${saturation * 100}%, ${lightness * 100}%)`,
+        textColor: labelColor(hue, saturation, lightness),
       };
     });
   }, [names, darkMode]);
@@ -88,16 +132,19 @@ export default function Wheel() {
     // pointer, plus several extra full turns for a satisfying spin.
     const targetCenter = winnerIndex * segAngle + segAngle / 2;
     const base = ((-targetCenter) % 360 + 360) % 360;
-    const currentMod = ((rotation % 360) + 360) % 360;
-    let delta = base - currentMod;
-    if (delta < 0) {
-      delta += 360;
-    }
     const extraTurns = 5;
 
     setWinner(null);
     setSpinning(true);
-    setRotation(rotation + delta + extraTurns * 360);
+    // Functional update so accumulated rotation stays correct across spins.
+    setRotation((prev) => {
+      const currentMod = ((prev % 360) + 360) % 360;
+      let delta = base - currentMod;
+      if (delta < 0) {
+        delta += 360;
+      }
+      return prev + delta + extraTurns * 360;
+    });
   };
 
   const handleTransitionEnd = () => {
@@ -179,7 +226,7 @@ export default function Wheel() {
                 {segments.map((seg) => {
                   const labelPoint = pointAt(seg.mid, LABEL_RADIUS);
                   return (
-                    <g key={`${seg.name}-${seg.start}`}>
+                    <g key={seg.start}>
                       <path
                         d={segmentPath(seg.start, seg.end)}
                         fill={seg.color}
@@ -189,7 +236,7 @@ export default function Wheel() {
                       <text
                         x={labelPoint.x}
                         y={labelPoint.y}
-                        fill="#FFFFFF"
+                        fill={seg.textColor}
                         fontSize={segments.length > 18 ? 9 : 12}
                         fontWeight={600}
                         textAnchor="middle"
